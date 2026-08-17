@@ -139,5 +139,45 @@ SELECT 'avaliacoes' AS tabela, COUNT(*) AS total FROM avaliacoes;
 		GROUP BY categoria
 		ORDER BY `Valor total em estoque` DESC;
 
-        
-        
+/* Bloco 5 — Desafio integrador — sem JOIN */
+
+	/* Tarefa 5.1 — Ranking de canal de venda e forma de pagamento*/
+
+		SELECT
+			canal_venda,
+			forma_pagamento,
+			COUNT(id) AS `Quantidade de pedidos`,
+			sum(valor_total) AS `Faturamento`
+		FROM pedidos
+		WHERE status = "Aprovado"
+		GROUP BY canal_venda, forma_pagamento
+		HAVING `Quantidade de pedidos` > 200
+		ORDER BY `Faturamento` DESC
+		LIMIT 5;
+
+	/* Tarefa 5.2 — Categorias "premium" do catálogo*/
+
+		SELECT
+			categoria,
+			COUNT(id) AS `Quantidade de produtos`,
+			AVG(preco) AS `Média Preço`
+		FROM produtos
+		-- Novamente, assumindo que um produto ativo é =1, pois a tabela não deixa claro essa informação
+		WHERE ativo = 1
+		GROUP BY categoria
+		HAVING `Média Preço` > 300
+		ORDER BY `Média Preço` DESC;
+
+	/* Tarefa 5.3 — Investigação: o boleto cancela mais que os outros meios de pagamento? */
+		
+		SELECT 
+			forma_pagamento,
+			ROUND(
+				(SUM(CASE WHEN status = 'cancelado' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 
+				2
+			) AS `Taxa Cancelamento`
+		FROM pedidos
+		GROUP BY forma_pagamento
+		ORDER BY `Taxa Cancelamento`
+
+		
