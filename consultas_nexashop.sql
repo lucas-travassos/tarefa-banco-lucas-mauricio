@@ -88,7 +88,50 @@ SELECT 'avaliacoes' AS tabela, COUNT(*) AS total FROM avaliacoes;
 	
 	/*Tarefa 4.2 — Quantas avaliações caem em cada faixa*/
 
-	--  A partir da classificação da tarefa 4.1, mostre quantas avaliações existem em cada faixa, da maior para a menor quantidade, em uma única consulta.
+		--  A partir da classificação da tarefa 4.1, mostre quantas avaliações existem em cada faixa, da maior para a menor quantidade, em uma única consulta.
+
+		SELECT 
+			nota,
+			CASE
+				WHEN nota = 1 THEN 'Insatisfatória'
+				WHEN nota = 2 THEN 'Insatisfatória'
+				WHEN nota = 3 THEN 'Regular'
+				WHEN nota = 4 THEN 'Boa'
+				WHEN nota = 5 THEN 'Excelente'
+			END AS resultado_avaliacao,
+			COUNT(*) AS quantidade
+			FROM avaliacoes
+			GROUP BY resultado_avaliacao
+			ORDER BY quantidade DESC;
+
+	/*Tarefa 4.3 — Taxa de aprovação de pedidos*/
+
+		-- Calcule, em uma única consulta, o percentual de pedidos com status = 'Aprovado' em relação ao total de pedidos.
+
+		SELECT
+			ROUND (AVG (CASE WHEN status = 'Aprovado' THEN 1 ELSE 0 END) * 100, 2 ) AS qtd_aprovacao
+			FROM pedidos;
+
+
+	/*Tarefa 4.4 — Perfil de relacionamento dos clientes*/
+
+		-- Classifique os clientes em 'Novo' (cadastro há menos de 1 ano), 'Fiel' (entre 1 e 3 anos) ou
+		-- 'Veterano' (mais de 3 anos), usando CASE combinado com TIMESTAMPDIFF, e mostre quantos clientes
+		-- existem em cada perfil.
+	
+		SELECT
+			data_cadastro,
+			CASE
+				WHEN TIMESTAMPDIFF (DAY, data_cadastro, NOW()) <= 365 THEN 'Novo'
+				WHEN TIMESTAMPDIFF (DAY, data_cadastro, NOW()) BETWEEN 366 AND  1095 THEN 'Fiel'
+				ELSE 'Veterano'
+			END AS classificacao_clientes
+		FROM clientes;
+
+	/*Tarefa 6.1 — Uma pergunta que ainda não conseguimos responder*/
+
+		-- Qual é o faturamnento por categoria de produtos, ainda não temos, pois não trabalhamos com joins.
+
 
 
 
