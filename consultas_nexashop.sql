@@ -29,8 +29,10 @@ SELECT 'avaliacoes' AS tabela, COUNT(*) AS total FROM avaliacoes;
 
 		-- Consultando cliente por nome com o termo (bru)
 
-		SELECT 
-			* FROM clientes WHERE nome LIKE 'bru%' 
+		SELECT
+			nome
+			FROM clientes
+			WHERE nome LIKE 'bru%';
 	
 	/*Tarefa 2.3 — Clientes sem telefone cadastrado*/
 
@@ -39,16 +41,17 @@ SELECT 'avaliacoes' AS tabela, COUNT(*) AS total FROM avaliacoes;
 		SELECT
 			nome, email, cidade, estado
 			FROM clientes
-			WHERE telefone = IS NULL
+			WHERE telefone = IS NULL;
 
 	/*Tarefa 2.4 — Pedidos de ticket intermediário aprovados*/
 
 		-- Listando pedidos aprovados com valores totais entre 100,00 e 500,00 ordendados do maior para o menor
 
-		SELECT 
-			* FROM pedidos
+		SELECT
+			valor_total
+			FROM pedidos
 			WHERE status = 'Aprovado' AND valor_total BETWEEN 100 AND 500
-			ORDER BY valor_total DESC
+			ORDER BY valor_total DESC;
 
 	/*Tarefa 2.5 — Alerta de reposição de estoque*/
 
@@ -58,7 +61,7 @@ SELECT 'avaliacoes' AS tabela, COUNT(*) AS total FROM avaliacoes;
 			nome, categoria, estoque
 			FROM produtos 
 			WHERE ativo = 1 AND estoque < 10
-			ORDER BY estoque ASC
+			ORDER BY estoque ASC;
 
 	/*Tarefa 2.6 — Alcance das campanhas de cupom*/
 
@@ -67,7 +70,7 @@ SELECT 'avaliacoes' AS tabela, COUNT(*) AS total FROM avaliacoes;
 		SELECT 
 			id, valor_total, cupom_desconto
 			FROM pedidos
-			WHERE cupom_desconto IS NOT NULL
+			WHERE cupom_desconto IS NOT NULL;
 
 /*Bloco 4 — Classificação com CASE e regras de negócio*/
 
@@ -125,8 +128,11 @@ SELECT 'avaliacoes' AS tabela, COUNT(*) AS total FROM avaliacoes;
 				WHEN TIMESTAMPDIFF (DAY, data_cadastro, NOW()) <= 365 THEN 'Novo'
 				WHEN TIMESTAMPDIFF (DAY, data_cadastro, NOW()) BETWEEN 366 AND  1095 THEN 'Fiel'
 				ELSE 'Veterano'
-			END AS classificacao_clientes
-		FROM clientes;
+			END AS classificacao_clientes,
+		COUNT(*) AS quantidade
+        FROM clientes
+        GROUP BY classificacao_clientes
+        ORDER BY quantidade ASC;
 
 	/*Tarefa 6.1 — Uma pergunta que ainda não conseguimos responder*/
 
